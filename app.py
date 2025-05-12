@@ -54,7 +54,7 @@ with st.sidebar:
         for file in files:
             try:
                 with st.spinner("Wait for it...", show_time=True):
-                    bot = rag_bot.Rag_Bot(st.session_state.api_key)
+                    # bot = rag_bot.Rag_Bot(st.session_state.api_key)
                     bot.tokenize_doc(file)
                     message3, st.session_state.vector_store = bot.create_faiss_index()
                     st.write(message3)
@@ -79,7 +79,7 @@ if chat_input:
 
 
 if chat_input:
-    bot = rag_bot.Rag_Bot(st.session_state.api_key)
+    # bot = rag_bot.Rag_Bot(st.session_state.api_key)
     # Get Bot response
     bot.query = chat_input
     try:
