@@ -68,18 +68,24 @@ for message in st.session_state.messages:
         st.markdown(message['content'])
 
 chat_input = st.chat_input("Type your question here!")
-if chat_input and st.session_state.vector_store:
-    # Display user chat message
-    with st.chat_message(name= "user", avatar="user.png"):
-        st.markdown(chat_input)
-    st.session_state.messages.append({'role':"user", 'content':chat_input})
-elif chat_input and (not files or not equip_name or not st.session_state.vector_store):
-    st.write("Please upload your documents, name your equipment and process the documents first!!")
+
+# if chat_input and st.session_state.vector_store:
+#     # Display user chat message
+#     with st.chat_message(name= "user", avatar="user.png"):
+#         st.markdown(chat_input)
+#     st.session_state.messages.append({'role':"user", 'content':chat_input})
+# elif chat_input and (not files or not equip_name or not st.session_state.vector_store):
+#     st.write("Please upload your documents, name your equipment and process the documents first!!")
 
 
 
 
 if chat_input and files and equip_name and st.session_state.vector_store:
+        # Display user chat message
+    with st.chat_message(name= "user", avatar="user.png"):
+        st.markdown(chat_input)
+    st.session_state.messages.append({'role':"user", 'content':chat_input})
+    
     # Get Bot response
     bot.query = chat_input
     try:
@@ -96,7 +102,7 @@ if chat_input and files and equip_name and st.session_state.vector_store:
 
     except Exception as e:
         st.write("Sorry Service unavailable now:", e)
-        
+
 elif chat_input and (not files or not equip_name or not st.session_state.vector_store):
     st.write("Please upload your documents, name your equipment and process the documents first!!")
 
