@@ -3,7 +3,8 @@ from langchain_groq import ChatGroq
 from pypdf import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter, SentenceTransformersTokenTextSplitter
 
-from chromadb import EphemeralClient, PersistentClient
+from langchain.vectorstores import FAISS
+from langchain_community.embeddings import SentenceTransformerEmbeddings
 from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
 
 from langchain_core.prompts import ChatPromptTemplate
@@ -19,18 +20,21 @@ class Rag_Bot:
         self.api_key = api_key
 
         self.token_split_text = None
-        self.client = PersistentClient(path="./chroma_db")
-        self.collections = [collection.name for collection in self.client.list_collections()]
-        self.embedding_function = SentenceTransformerEmbeddingFunction(model_name= embedding_model,
-                                                                       device= 'cpu')
+        self.vectorstore = None
+
+        self.embedding_function = SentenceTransformerEmbeddings(
+            model_name=embedding_model,
+            model_kwargs={'device': 'cpu'}
+)
+
         self.llm = ChatGroq(api_key=self.api_key, model="llama-3.3-70b-versatile",
                             temperature=0,max_tokens=None,timeout=None,max_retries=2)
         self.query = None
-        self.selected_collection = None
+
         self.prompt1 = ChatPromptTemplate.from_messages([
             ("system", 
             "You are a helpful expert Mechanical Engineer. Provide an example answer to the given question,\
-            that might be found in an Installation, Operation, Maintenance and troubleshooting manufacturer manual regarding a {collection}"),
+            that might be found in an Installation, Operation, Maintenance and troubleshooting manufacturer manual regarding a {equipment_name}"),
             ("user", "{query}")
         ])   
         self.generated_answer = None
@@ -39,7 +43,7 @@ class Rag_Bot:
         self.num_top_results = num_top_reults
         self.prompt2 = ChatPromptTemplate.from_messages([
             ("system", 
-            "You are a helpful expert Mechanical Engineer. Your users are asking questions about information contained in {collection}'s\
+            "You are a helpful expert Mechanical Engineer. Your users are asking questions about information contained in {equipment_name}'s\
             Installation, Operation, Maintenance or troubleshooting manufacturer manual.\n\nYou will be shown the user's question, and the\
             relevant information from the manufacturer manual. Answer the user's question USING ONLY these PROVIDED INFORMATION,\
             and if you think the provided information are not relevant just SAY that the answer doesn't exist in the Manual and don't\
@@ -67,62 +71,53 @@ class Rag_Bot:
             self.token_split_text += token_splitter.split_text(text)
         return self.token_split_text
     
-    def create_get_collection(self, collection_name):
+
+
+    def create_faiss_index(self):
         if self.token_split_text:
-            collection_name = collection_name.replace(" ", "_").title()
-            collection = self.client.create_collection(name=collection_name, 
-                                                       embedding_function=self.embedding_function,
-                                                       get_or_create=True)
-            ids_list = collection.get().get('ids', [])
-        
-            if ids_list:
-                last_id = int(ids_list[-1])
-            else:
-                last_id = 0  # Start from 0 if no IDs are present
-            
-            ids = [str(i) for i in range(last_id+1, last_id+1+len(self.token_split_text))]
-            embeddings = self.embedding_function(self.token_split_text)
-            collection.add(ids=ids, documents=self.token_split_text, embeddings= embeddings)
-            self.collections = [collection.name for collection in self.client.list_collections()]
+            # Generate embeddings & create index
+            self.vectorstore = FAISS.from_texts(
+                texts = self.token_split_text,
+                embedding = self.embedding_function)
             self.token_split_text = None
             message_2 = "Document Processed Successfully"
         else:
             message_2 = "Please upload a file first!! and try again"
-        return message_2
+        return message_2,self.vectorstore
 
-
-    def generate_initial_answer(self):
+    def generate_initial_answer(self, equipment_name):
         augmentation_chain = self.prompt1 | self.llm
         response = augmentation_chain.invoke(
-            {"collection": self.selected_collection,
+            {"equipment_name": equipment_name,
             "query": self.query})
         self.generated_answer = response.content
         return self.generated_answer
     
-    def query_collection(self):
+    
+    def query_index(self, vector_store):
+        # Create the augmented query 
         augmented_query = self.query + "\n" + self.generated_answer
-        results_list_of_lists = self.selected_collection.query(query_texts=augmented_query, n_results = self.num_results)['documents']
-        # flatten the list and keep unique results only (useful in case of multiple queries)
+
+        # FAISS returns a list of results, where each result contains a 'document' and its 'score'
+        results = vector_store.similarity_search(augmented_query, k=self.num_results)
+
+        # Extract only unique documents
         unique_results = set()
-        for res_list in results_list_of_lists:
-            for res in res_list:
-                unique_results.add(res)
-        self.results = list(unique_results)
+        for res in results:
+            unique_results.add(res.page_content)
+
         # Get only top n answers
-        self.results = self.results[:self.num_top_results]
+        self.results = list(unique_results)[:self.num_top_results]
         return self.results
     
-    def get_final_answer(self):
+    def get_final_answer(self, equipment_name):
         final_chain = self.prompt2 | self.llm
         info = "\n\n".join(self.results)
         response = final_chain.invoke(
-            {"collection": self.selected_collection,
+            {"equipment_name": equipment_name,
              "query": self.query,
              "information": info}
         )
         self.final_answer = response.content
         return self.final_answer
     
-    def select_collection(self, collection):
-        self.selected_collection = self.client.get_collection(name= collection)
-

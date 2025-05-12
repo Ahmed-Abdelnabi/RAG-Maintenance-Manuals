@@ -9,6 +9,10 @@ st.set_page_config(page_title="Maintenance Manuals Chat Bot", page_icon=":robot:
 if "api_key" not in st.session_state:
     st.session_state.api_key = None
 
+if "vector_store" not in st.session_state:
+    st.session_state.vector_store = None
+
+
 st.session_state.api_key = st.secrets['GROQ_API_KEY']
 
 st.title("🛠️:blue[Equipment Manuals Chatbot]")
@@ -31,15 +35,15 @@ with st.sidebar:
 
     process_btn = st.button(label= "Process Documents", use_container_width=True, disabled=st.session_state.prevent_upload)
 
-    if process_btn:
+    if process_btn and eqip_name:
         for file in files:
             try:
                 with st.spinner("Wait for it...", show_time=True):
                     bot.tokenize_doc(file)
-                    message3 = bot.create_get_collection(eqip_name)
+                    message3, st.session_state.vector_store = bot.create_faiss_index()
                     st.write(message3)
             except AttributeError as e:
-                st.write("Please upload file first!! and try again")
+                st.write(e)
 
 
 
@@ -56,17 +60,19 @@ if chat_input:
     st.session_state.messages.append({'role':"user", 'content':chat_input})
 
 
-st.session_state.selected_collection = st.radio("Select Equipment Collection", bot.collections, horizontal=True)
 
 
 if chat_input:
     # Get Bot response
     bot.query = chat_input
-    bot.select_collection(st.session_state.selected_collection)
     try:
-        bot.generate_initial_answer()
-        bot.query_collection()
-        bot_answer = bot.get_final_answer()
+        bot.generate_initial_answer(eqip_name)
+        bot.query_index(st.session_state.vector_store)
+        bot_answer = bot.get_final_answer(eqip_name)
+
+        # Display user chat message
+        with st.chat_message(name= "assistant", avatar="assistant.png"):
+            st.markdown(bot_answer)
 
         # Append response to messages history to be dispalyed
         st.session_state.messages.append({'role':"assistant", 'content':bot_answer})
@@ -75,6 +81,6 @@ if chat_input:
         st.write("Sorry Service unavailable now:", e)
 
 
-    st.rerun()
+
 
 
