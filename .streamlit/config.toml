@@ -6,6 +6,6 @@ fileWatcherType = "watchdog"
 
 # Allow running from anywhere (helpful for some deployment platforms)
 headless = true
-enableCORS = true
+enableCORS = false
 port = 8501
 enableXsrfProtection = true  # Enable XSRF protection to prevent CSRF attacks.
