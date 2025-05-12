@@ -73,7 +73,6 @@ class Rag_Bot:
         return self.token_split_text
     
     def create_get_collection(self, collection_name):
-        self.client = EphemeralClient()
         if self.token_split_text:
             collection_name = collection_name.replace(" ", "_").title()
             collection = self.client.create_collection(name=collection_name, 
@@ -132,7 +131,3 @@ class Rag_Bot:
     def select_collection(self, collection):
         self.selected_collection = self.client.get_collection(name= collection)
 
-    
-    def chat_check(self, query):
-        response = self.llm.invoke(query)
-        return(response)
