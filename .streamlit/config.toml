@@ -1,0 +1,11 @@
+# .streamlit/config.toml
+
+[server]
+# Use "watchdog" for more reliable file watching
+fileWatcherType = "watchdog"
+
+# Allow running from anywhere (helpful for some deployment platforms)
+headless = true
+enableCORS = true
+port = 8501
+enableXsrfProtection = true  # Enable XSRF protection to prevent CSRF attacks.
