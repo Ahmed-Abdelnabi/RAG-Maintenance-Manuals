@@ -136,7 +136,3 @@ class Rag_Bot:
     def chat_check(self, query):
         response = self.llm.invoke(query)
         return(response)
-
-
-# bot = Rag_Bot("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")
-# print(bot.chat_check("what is the capital of EGYPT"))
