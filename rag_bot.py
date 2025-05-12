@@ -1,8 +1,3 @@
-import os
-from dotenv import load_dotenv
-import openai
-import numpy as np
-
 from langchain_groq import ChatGroq
 
 from pypdf import PdfReader

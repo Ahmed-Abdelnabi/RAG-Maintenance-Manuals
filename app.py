@@ -1,8 +1,6 @@
 import streamlit as st
 import rag_bot
 import time
-import os
-import dotenv
 
 # Set up the Streamlit app page configuration
 st.set_page_config(page_title="Maintenance Manuals Chat Bot", page_icon=":robot:")
