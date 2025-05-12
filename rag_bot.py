@@ -5,7 +5,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter, SentenceTran
 
 from langchain.vectorstores import FAISS
 from langchain_community.embeddings import SentenceTransformerEmbeddings
-from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
+
 
 from langchain_core.prompts import ChatPromptTemplate
 
