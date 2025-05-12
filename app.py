@@ -2,6 +2,14 @@ import streamlit as st
 import rag_bot
 import time
 
+@st.cache_resource 
+def load_rag_bot(api_key):
+    """Loads the Rag_Bot instance and caches it."""
+    print("--- Initializing Rag_Bot (this should only run once or when cleared) ---")
+    bot_instance = rag_bot.Rag_Bot(api_key)
+    print("--- Rag_Bot Initialized ---")
+    return bot_instance
+
 # Set up the Streamlit app page configuration
 st.set_page_config(page_title="Maintenance Manuals Chat Bot", page_icon=":robot:")
 
@@ -16,7 +24,14 @@ if "vector_store" not in st.session_state:
 st.session_state.api_key = st.secrets['GROQ_API_KEY']
 
 st.title("🛠️:blue[Equipment Manuals Chatbot]")
-bot = rag_bot.Rag_Bot(st.session_state.api_key)
+
+try:
+    bot = load_rag_bot(st.session_state.api_key)
+except Exception as e:
+    st.error(f"Error initializing RAG Bot: {e}")
+    # Add more detailed logging or traceback if needed
+    st.error("The application might be unstable. Please check logs or contact support.")
+    st.stop() # Stop execution if bot fails to load
 
 # Initialize chat history
 if "messages" not in st.session_state:
@@ -39,6 +54,7 @@ with st.sidebar:
         for file in files:
             try:
                 with st.spinner("Wait for it...", show_time=True):
+                    bot = rag_bot.Rag_Bot(st.session_state.api_key)
                     bot.tokenize_doc(file)
                     message3, st.session_state.vector_store = bot.create_faiss_index()
                     st.write(message3)
@@ -63,6 +79,7 @@ if chat_input:
 
 
 if chat_input:
+    bot = rag_bot.Rag_Bot(st.session_state.api_key)
     # Get Bot response
     bot.query = chat_input
     try:
