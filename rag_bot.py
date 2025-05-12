@@ -22,10 +22,7 @@ class Rag_Bot:
         self.token_split_text = None
         self.vectorstore = None
 
-        self.embedding_function = SentenceTransformerEmbeddings(
-            model_name=embedding_model,
-            model_kwargs={'device': 'cpu'}
-)
+        self.embedding_function = SentenceTransformerEmbeddings(model_name=embedding_model)
 
         self.llm = ChatGroq(api_key=self.api_key, model="llama-3.3-70b-versatile",
                             temperature=0,max_tokens=None,timeout=None,max_retries=2)
