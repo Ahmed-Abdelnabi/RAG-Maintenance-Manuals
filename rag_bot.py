@@ -3,7 +3,7 @@ from langchain_groq import ChatGroq
 from pypdf import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter, SentenceTransformersTokenTextSplitter
 
-from chromadb import EphemeralClient
+from chromadb import EphemeralClient, PersistentClient
 from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
 
 from langchain_core.prompts import ChatPromptTemplate
@@ -19,7 +19,7 @@ class Rag_Bot:
         self.api_key = api_key
 
         self.token_split_text = None
-        self.client = EphemeralClient()
+        self.client = PersistentClient(path="./chroma_db")
         self.collections = [collection.name for collection in self.client.list_collections()]
         self.embedding_function = SentenceTransformerEmbeddingFunction(model_name= embedding_model,
                                                                        device= 'cpu')
