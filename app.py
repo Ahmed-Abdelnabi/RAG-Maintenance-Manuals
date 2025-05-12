@@ -5,7 +5,7 @@ import time
 @st.cache_resource 
 def load_rag_bot(api_key):
     """Loads the Rag_Bot instance and caches it."""
-    print("--- Initializing Rag_Bot (this should only run once or when cleared) ---")
+    print("--- Initializing Rag_Bot ---")
     bot_instance = rag_bot.Rag_Bot(api_key)
     print("--- Rag_Bot Initialized ---")
     return bot_instance
@@ -44,17 +44,16 @@ if "create_and_upload" not in st.session_state:
 with st.sidebar:
     st.header("🔽 Upload documents 🔽")
     files = st.file_uploader(label= "Upload files", accept_multiple_files=True, type="pdf", label_visibility='hidden')
-    eqip_name = st.text_input('Insert equipment name')
+    equip_name = st.text_input('Insert equipment name')
     if files:
         st.session_state.prevent_upload = False
 
     process_btn = st.button(label= "Process Documents", use_container_width=True, disabled=st.session_state.prevent_upload)
 
-    if process_btn and eqip_name:
+    if process_btn and equip_name:
         for file in files:
             try:
                 with st.spinner("Wait for it...", show_time=True):
-                    # bot = rag_bot.Rag_Bot(st.session_state.api_key)
                     bot.tokenize_doc(file)
                     message3, st.session_state.vector_store = bot.create_faiss_index()
                     st.write(message3)
@@ -69,23 +68,24 @@ for message in st.session_state.messages:
         st.markdown(message['content'])
 
 chat_input = st.chat_input("Type your question here!")
-if chat_input:
+if chat_input and st.session_state.vector_store:
     # Display user chat message
     with st.chat_message(name= "user", avatar="user.png"):
         st.markdown(chat_input)
     st.session_state.messages.append({'role':"user", 'content':chat_input})
+elif chat_input and (not files or not equip_name or not st.session_state.vector_store):
+    st.write("Please upload your documents, name your equipment and process the documents first!!")
 
 
 
 
-if chat_input:
-    # bot = rag_bot.Rag_Bot(st.session_state.api_key)
+if chat_input and files and equip_name and st.session_state.vector_store:
     # Get Bot response
     bot.query = chat_input
     try:
-        bot.generate_initial_answer(eqip_name)
+        bot.generate_initial_answer(equip_name)
         bot.query_index(st.session_state.vector_store)
-        bot_answer = bot.get_final_answer(eqip_name)
+        bot_answer = bot.get_final_answer(equip_name)
 
         # Display user chat message
         with st.chat_message(name= "assistant", avatar="assistant.png"):
@@ -96,6 +96,9 @@ if chat_input:
 
     except Exception as e:
         st.write("Sorry Service unavailable now:", e)
+        
+elif chat_input and (not files or not equip_name or not st.session_state.vector_store):
+    st.write("Please upload your documents, name your equipment and process the documents first!!")
 
 
 
