@@ -28,14 +28,7 @@ st.markdown(
     "<h2 style='text-align: center; color: #388186;'>🚚Equipment Manuals Chatbot</h2>",
     unsafe_allow_html=True
 )
-st.divider()
 
-st.markdown("<h4 style='text-align: center;'>💡 How to Use:</h4>", unsafe_allow_html=True)
-st.markdown("""
-- **Step 1:** Upload your equipment manual in PDF format using the upload box.  
-- **Step 2:** Enter the equipment name in the text field below the upload area.  
-- **Step 3:** Click on **Process Documents** to extract and analyze the content.  
-- **Step 4:** Ask any technical question in the chat below about your equipment.""")
 
 try:
     bot = load_rag_bot(st.session_state.api_key)
@@ -52,6 +45,14 @@ if "messages" not in st.session_state:
 if "create_and_upload" not in st.session_state:
     st.session_state.prevent_upload = True
 
+st.divider()
+
+st.markdown("<h4 style='text-align: center;'>💡 How to Use:</h4>", unsafe_allow_html=True)
+st.markdown("""
+- **Step 1:** Upload your equipment manual in PDF format using the upload box.  
+- **Step 2:** Enter the equipment name in the text field below the upload area.  
+- **Step 3:** Click on **Process Documents** to extract and analyze the content.  
+- **Step 4:** Ask any technical question in the chat below about your equipment.""")
 
 with st.sidebar:
 
