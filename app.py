@@ -47,12 +47,18 @@ if "create_and_upload" not in st.session_state:
 
 st.divider()
 
-st.markdown("<h4 style='text-align: center;'>💡 How to Use:</h4>", unsafe_allow_html=True)
+st.markdown("<h5 style='text-align: center;'>💡 How to Use:</h5>", unsafe_allow_html=True)
 st.markdown("""
 - **Step 1:** Upload your equipment manual in PDF format using the upload box.  
 - **Step 2:** Enter the equipment name in the text field below the upload area.  
 - **Step 3:** Click on **Process Documents** to extract and analyze the content.  
 - **Step 4:** Ask any technical question in the chat below about your equipment.""")
+# st.markdown("#### Example questions:")
+st.markdown("<h5 style='text-align: center;'>Example questions:</h5>", unsafe_allow_html=True)
+st.markdown(""" 
+    - What are the components of the "combustion" system for ther "Gas Turbine"? 
+    - How do I troubleshoot a problem of "oil consumption" in the "Air compressor"?  
+    """)
 
 with st.sidebar:
 
@@ -73,11 +79,7 @@ with st.sidebar:
                     st.write(message3)
             except AttributeError as e:
                 st.write(e)
-    st.markdown("#### Example questions:")
-    st.markdown(""" 
-        - ###### What are the components of the "combustion" system for ther "Gas Turbine"? 
-        - ###### How do I troubleshoot the problem "oil consumption" in the "Air compressor"?  
-        """)
+
 
 
 # Display messages from chat history each rerun
