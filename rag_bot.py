@@ -1,14 +1,9 @@
 from langchain_groq import ChatGroq
-
 from pypdf import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter, SentenceTransformersTokenTextSplitter
-
 from langchain.vectorstores import FAISS
 from langchain_community.embeddings import SentenceTransformerEmbeddings
-
-
 from langchain_core.prompts import ChatPromptTemplate
-
 import streamlit as st
 
 
@@ -42,7 +37,7 @@ class Rag_Bot:
             ("system", 
             "You are a helpful expert Mechanical Engineer. Your users are asking questions about information contained in {equipment_name}'s\
             Installation, Operation, Maintenance or troubleshooting manufacturer manual.\n\nYou will be shown the user's question, and the\
-            relevant information from the manufacturer manual. Answer the user's question USING ONLY these PROVIDED INFORMATION,\
+            relevant information from the manufacturer manual. Answer the user's question ONLY USING these PROVIDED INFORMATION,\
             and if you think the provided information are not relevant just SAY that the answer doesn't exist in the Manual and don't\
             ever invent answers. Please always format your answer using Markdown. Use bullet points for lists, bold for emphasis, etc."),
             ("user", "Question: {query}. \n\nInformation:\n{information}")
@@ -52,7 +47,7 @@ class Rag_Bot:
     def tokenize_doc(self, doc_path):
         doc = PdfReader(doc_path)
         pdf_texts = [p.extract_text().strip() for p in doc.pages]
-        # filter out empty strings
+        # filter out empty strings if any
         pdf_texts = [text for text in pdf_texts if text]
 
         char_splitter = RecursiveCharacterTextSplitter(
@@ -76,7 +71,7 @@ class Rag_Bot:
             self.vectorstore = FAISS.from_texts(
                 texts = self.token_split_text,
                 embedding = self.embedding_function)
-            self.token_split_text = None
+            self.token_split_text = None # to remove the tokenized text after embedding
             message_2 = "Document Processed Successfully"
         else:
             message_2 = "Please upload a file first!! and try again"
