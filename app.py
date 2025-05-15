@@ -54,7 +54,7 @@ st.markdown("""
 - **Step 4:** Ask any technical question in the chat below about your equipment.""")
 st.markdown("<h5 style='text-align: center;'>Example questions:</h5>", unsafe_allow_html=True)
 st.markdown(""" 
-    - What are the components of the "combustion" system for ther "Gas Turbine"? 
+    - What are the components of the "combustion" system for the "Gas Turbine"? 
     - How do I troubleshoot a problem of "oil consumption" in the "Air compressor"?  
     """)
 
