@@ -46,3 +46,8 @@ Thumbs.db
 # PyCharm
 # ------------------------
 .idea/
+
+.devcontainer
+Presentation Media/
+RAG Chat Bot.pptx
+~$RAG Chat Bot.pptx
