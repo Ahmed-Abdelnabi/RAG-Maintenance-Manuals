@@ -11,7 +11,7 @@ def load_rag_bot(api_key):
     return bot_instance
 
 # Set up the Streamlit app page configuration
-st.set_page_config(page_title="Maintenance Manuals Chat Bot", page_icon=":robot:")
+st.set_page_config(page_title="Mechanical Maintenance Assistant", page_icon=":robot:")
 
 
 if "api_key" not in st.session_state:
