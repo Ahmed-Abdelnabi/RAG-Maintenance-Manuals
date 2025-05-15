@@ -34,8 +34,7 @@ try:
     bot = load_rag_bot(st.session_state.api_key)
 except Exception as e:
     st.error(f"Error initializing RAG Bot: {e}")
-    # Add more detailed logging or traceback if needed
-    st.error("The application might be unstable. Please check logs or contact support.")
+    st.error("The application might be unstable. Please Try Again Later.")
     st.stop() # Stop execution if bot fails to load
 
 # Initialize chat history
@@ -53,7 +52,6 @@ st.markdown("""
 - **Step 2:** Enter the equipment name in the text field below the upload area.  
 - **Step 3:** Click on **Process Documents** to extract and analyze the content.  
 - **Step 4:** Ask any technical question in the chat below about your equipment.""")
-# st.markdown("#### Example questions:")
 st.markdown("<h5 style='text-align: center;'>Example questions:</h5>", unsafe_allow_html=True)
 st.markdown(""" 
     - What are the components of the "combustion" system for ther "Gas Turbine"? 
@@ -91,20 +89,20 @@ chat_input = st.chat_input("Type your question here!")
 
 
 if chat_input and files and equip_name and st.session_state.vector_store:
-        # Display user chat message
+    # Display user chat message
     with st.chat_message(name= "user", avatar="user.png"):
         st.markdown(chat_input)
     st.session_state.messages.append({'role':"user", 'content':chat_input})
     
     # Get Bot response
-    with st.spinner("Thinking...", show_time=True):
+    with st.spinner("Bot is Thinking...", show_time=True):
         bot.query = chat_input
         try:
             bot.generate_initial_answer(equip_name)
             bot.query_index(st.session_state.vector_store)
             bot_answer = bot.get_final_answer(equip_name)
 
-            # Display user chat message
+            # Display Assistant chat message
             with st.chat_message(name= "assistant", avatar="assistant.png"):
                 st.markdown(bot_answer)
 
