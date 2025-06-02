@@ -9,3 +9,8 @@ headless = true
 enableCORS = false
 port = 8501
 enableXsrfProtection = true  # Enable XSRF protection to prevent CSRF attacks.
+
+[theme]
+base="light"
+primaryColor="#0b87a2"
+secondaryBackgroundColor="#d4dce0"
