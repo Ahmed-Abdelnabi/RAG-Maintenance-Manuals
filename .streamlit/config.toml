@@ -13,4 +13,4 @@ enableXsrfProtection = true  # Enable XSRF protection to prevent CSRF attacks.
 [theme]
 base="light"
 primaryColor="#0b87a2"
-secondaryBackgroundColor="#d4dce0"
+secondaryBackgroundColor="#ebf3f7"
