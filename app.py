@@ -125,7 +125,7 @@ with st.sidebar:
     st.markdown("#### Upload Maintenance Manuals")
     files = st.file_uploader(label= "Upload files", accept_multiple_files=True, type="pdf", label_visibility='hidden')
     equip_name = st.text_input('Insert equipment name')
-    if files:
+    if files and equip_name:
         st.session_state.prevent_upload = False
 
     process_btn = st.button(label= "Process Documents", use_container_width=True, disabled=st.session_state.prevent_upload)
