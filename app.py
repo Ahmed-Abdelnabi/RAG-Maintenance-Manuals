@@ -17,18 +17,34 @@ st.set_page_config(page_title="Mechanical Maintenance Assistant", page_icon=":ro
 
 st.markdown("""
 <style>
-    /* Mobile optimization */
+    /* Mobile optimization for chat content */
     @media (max-width: 768px) {
+        /* Larger text and inputs */
         .stTextInput>div>div>input {
-            font-size: 16px !important;
-            padding: 12px !important;
+            font-size: 18px !important;
+            padding: 14px !important;
+            height: 60px !important;
         }
         .stButton>button {
-            padding: 10px 16px !important;
-            font-size: 16px !important;
+            padding: 12px 20px !important;
+            font-size: 18px !important;
+            height: 60px !important;
         }
         .stMarkdown {
-            font-size: 16px !important;
+            font-size: 18px !important;
+            line-height: 1.6 !important;
+        }
+        
+        /* Better spacing */
+        .stChatMessage {
+            padding: 12px !important;
+            margin-bottom: 15px !important;
+        }
+        
+        /* Larger send button */
+        [data-testid="stChatInputContainer"] button {
+            min-height: 50px !important;
+            width: 50px !important;
         }
     }
 </style>
