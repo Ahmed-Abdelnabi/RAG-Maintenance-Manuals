@@ -2,6 +2,7 @@ import streamlit as st
 import rag_bot
 import time
 
+
 @st.cache_resource 
 def load_rag_bot(api_key):
     """Loads the Rag_Bot instance and caches it."""
@@ -10,8 +11,28 @@ def load_rag_bot(api_key):
     print("--- Rag_Bot Initialized ---")
     return bot_instance
 
+
 # Set up the Streamlit app page configuration
 st.set_page_config(page_title="Mechanical Maintenance Assistant", page_icon=":robot:")
+
+st.markdown("""
+<style>
+    /* Mobile optimization */
+    @media (max-width: 768px) {
+        .stTextInput>div>div>input {
+            font-size: 16px !important;
+            padding: 12px !important;
+        }
+        .stButton>button {
+            padding: 10px 16px !important;
+            font-size: 16px !important;
+        }
+        .stMarkdown {
+            font-size: 16px !important;
+        }
+    }
+</style>
+""", unsafe_allow_html=True)
 
 
 if "api_key" not in st.session_state:

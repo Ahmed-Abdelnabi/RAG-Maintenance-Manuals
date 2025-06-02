@@ -6,7 +6,6 @@ from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain_core.prompts import ChatPromptTemplate
 import streamlit as st
 
-
 class Rag_Bot:
     def __init__(self, api_key,
                  embedding_model = "all-MiniLM-L6-v2", 
