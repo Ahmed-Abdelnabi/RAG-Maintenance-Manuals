@@ -19,32 +19,57 @@ st.markdown("""
 <style>
     /* Mobile optimization for chat content */
     @media (max-width: 768px) {
-        /* Larger text and inputs */
+        /* Responsive chat container */
+        .stChatFloatingInputContainer {
+            padding: 8px !important;
+        }
+        
+        /* Larger touch targets */
         .stTextInput>div>div>input {
-            font-size: 18px !important;
-            padding: 14px !important;
-            height: 60px !important;
-        }
-        .stButton>button {
-            padding: 12px 20px !important;
-            font-size: 18px !important;
-            height: 60px !important;
-        }
-        .stMarkdown {
-            font-size: 18px !important;
-            line-height: 1.6 !important;
-        }
-        
-        /* Better spacing */
-        .stChatMessage {
+            font-size: 16px !important;
             padding: 12px !important;
-            margin-bottom: 15px !important;
+            height: 50px !important;
         }
         
-        /* Larger send button */
-        [data-testid="stChatInputContainer"] button {
-            min-height: 50px !important;
-            width: 50px !important;
+        .stButton>button {
+            padding: 10px 16px !important;
+            font-size: 16px !important;
+            height: 50px !important;
+        }
+        
+        /* Better message spacing */
+        .stChatMessage {
+            padding: 10px !important;
+            margin-bottom: 10px !important;
+        }
+        
+        /* Message text sizing */
+        .stMarkdown {
+            font-size: 16px !important;
+        }
+        
+        /* Input container */
+        [data-testid="stVerticalBlock"] {
+            gap: 8px !important;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        /* Even more compact on small screens */
+        .stTextInput>div>div>input {
+            font-size: 14px !important;
+            padding: 10px !important;
+            height: 45px !important;
+        }
+        
+        .stButton>button {
+            padding: 8px 14px !important;
+            font-size: 14px !important;
+            height: 45px !important;
+        }
+        
+        .stMarkdown {
+            font-size: 14px !important;
         }
     }
 </style>
