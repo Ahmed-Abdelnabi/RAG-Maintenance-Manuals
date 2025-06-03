@@ -479,14 +479,14 @@
   <!-- Enhanced Chat Bubble Widget -->
   <div id="chat-bubble">
       <div id="chat-icon">
-          <img id="custom-logo" src="https://uxwing.com/wp-content/themes/uxwing/download/communication-chat-call/chatbot-icon.png" alt="Chat Assistant">
+          <img id="custom-logo" src="chatbot-icon.png" alt="Chat Assistant">
       </div>
   </div>
 
   <div id="chat-window">
       <div id="chat-header">
           <div id="bot-info">
-              <img id="bot-logo" src="https://uxwing.com/wp-content/themes/uxwing/download/communication-chat-call/chatbot-icon.png" alt="Bot Logo">
+              <img id="bot-logo" src="chatbot-icon.png" alt="Bot Logo">
               <span id="bot-name">MechaCare Assistant</span>
           </div>
           <div class="header-buttons">
@@ -649,7 +649,7 @@
 
       // Fullscreen functionality
       document.getElementById('fullscreen-button').addEventListener('click', function() {
-          const cleanUrl = "https://maintenance-manuals-chatbot.streamlit.app/";
+          const cleanUrl = "https://maintenance-manuals-chatbot.streamlit.app/?embed=true";
           const newWindow = window.open(cleanUrl, '_blank');
           if (newWindow) {
               newWindow.focus();
